@@ -140,10 +140,10 @@
 .calendar-modal__toggle-button {
     cursor: pointer;
     width: 100%;
-    border-radius: 5px;
     display: inline-flex;
     justify-content: stretch;
-    padding: 0;
+    padding: 5px 5px;
+    position: relative;
 }
 
 .calendar-modal__toggle-button:hover {
@@ -153,8 +153,8 @@
 .calendar-modal__options-list {
     width: 320px;
     position: absolute;
-    top: 100%;
-    left: 50%;
+    top: -50px;
+    left: 105%;
     /*transform: translateX(-50%);*/
     list-style: none;
     padding: 0;
@@ -182,6 +182,12 @@
     right: 2%;
     cursor: pointer;
     z-index: 2;
+}
+
+.calendar-modal__close svg {
+    color: #343434;
+    width: 20px;
+    height: 20px;
 }
 
 /* NewListModal */
@@ -350,7 +356,7 @@
     background-color: #c2bcbc;
     color: #333;
     border: none;
-    padding: 10px 20px;
+    padding: 5px 10px;
     cursor: pointer;
     width: 100%;
     border-radius: 5px;

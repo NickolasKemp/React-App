@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import '../UIComponentsStyle.css'
-import { useOutside } from '../hooks/useOutside';
+import '../../UIComponentsStyle.css'
+import { useOutside } from '../../hooks/useOutside';
 
 // @ts-ignore
 function OptionsList({ children}) {

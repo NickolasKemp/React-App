@@ -1,20 +1,35 @@
-import React, { useContext, useState } from 'react';
-import OptionsModal from './OptionsModal';
+import React, { useContext, useEffect, useState } from 'react';
+import OptionsModal from './ui/OptionsModal';
 import 'react-day-picker/dist/style.css';
 import { AppContext } from './Context';
 import Tasks from './Tasks';
-import { Task } from '../data/tasks';
-import EditListModal from './EditListModal';
-import {v4 as uuidv4} from 'uuid';
+import EditListModal from './ui/EditListModal';
 import { ListType } from '../data/lists';
+import { useTasks } from '../hooks/useTasks';
+import { ITaskResponse } from '../types/task.types';
+import { useCreateTask } from '../hooks/useCreateTask';
+import { useGetDate } from '../hooks/useGetDate';
+import { useCreateHistoryMessage } from '../hooks/useCreateHistoryMessage';
+import { taskService } from '../services/task.service';
 interface ListProps {
-  list: {id: string, name: string}
+  list: {id: string, label: string}
 }
 
 const List : React.FC<ListProps> = ({list}) => {
+  const { items, setItems } = useTasks()
 
-  const {lists, setLists, tasks, setTasks, setCurrentTask, showTask} = useContext(AppContext)
+  const [currentListTasks, setCurrentListTasks] = useState<ITaskResponse[]>([])
+  useEffect(() => {
+    function filterCurrentListTask() {
+      if(items) {
+        setCurrentListTasks(items.filter(
+          (item: ITaskResponse ) => item.status.toLowerCase() === list.label.toLowerCase()))
+      }
+    }
+    filterCurrentListTask()
+  }, [items])
 
+  const {lists, setLists, tasks, setTasks, setCurrentTask} = useContext(AppContext)
   function removeList(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.stopPropagation()
     e.preventDefault()
@@ -23,22 +38,30 @@ const List : React.FC<ListProps> = ({list}) => {
     setLists(remainingLists)
   }
 
-  function createTask() {
-   const newTask = {id: uuidv4(), name: ' ', dueDate: "not defined",  description: "",
-     status: list.name, priority: "low"}
-      setTasks((prev: Task[]) => [...prev, newTask])
-    if(newTask) {
-      setCurrentTask(newTask)
-      showTask()
-    }
+  const {createTask} = useCreateTask()
+  const { createHistoryMessage } = useCreateHistoryMessage()
+
+  function createNewTask() {
+   const newTask = { name: 'Untitled', dueDate: "not defined",  description: "",
+     status: list.label.toLowerCase() , priority: undefined}
+    createTask(newTask)
+      .then((data: any) => {
+        createHistoryMessage(`You added a new task to "${list.label}"`, data.data.id);
+      })
+      .catch((error) => {
+        console.error("Error creating task:", error);
+      });
+
+
+
   }
 
   return (
       <div className="list">
         <div className="list__title title-list">
-          <h3>{list.name}</h3>
+          <h3>{list.label}</h3>
           <div className="title-list__actions">
-            <span>2</span>
+            <span>{currentListTasks.length}</span>
             <OptionsModal>
               <EditListModal id={list.id} >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -48,7 +71,7 @@ const List : React.FC<ListProps> = ({list}) => {
                   </svg>
                   <span>Edit</span>
               </EditListModal>
-              <button onClick={createTask} className="icon">
+              <button onClick={createNewTask} className="icon">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                      stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -66,14 +89,14 @@ const List : React.FC<ListProps> = ({list}) => {
             </OptionsModal>
           </div>
         </div>
-        <button onClick={createTask} className="list__button">
+        <button onClick={createNewTask} className="list__button">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                stroke="currentColor" className="w-3 h-3">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
           Add new task
         </button>
-        <Tasks list={list} />
+        <Tasks list={list} items={currentListTasks} />
       </div>
   );
 };
