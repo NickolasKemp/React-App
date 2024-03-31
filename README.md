@@ -7,10 +7,11 @@ Clone the project
   git clone https://github.com/NickolasKemp/React-App.git
 ```
 
-Go to the project directory
+Go to the project directories
 
 ```bash
-  cd React-App
+  cd React-App/backend
+  cd React-App/frontend
 ```
 
 Install dependencies
@@ -19,7 +20,7 @@ Install dependencies
   npm install
 ```
 
-Configure .env file in backend directory
+Create and configure .env file in backend directory
 
 
 ```bash
@@ -33,13 +34,13 @@ Generate prisma client
 ```
 
 
-Start the Backend Server
+Start the backend server
 
 ```bash
   npm run start:dev
 ```
 
-Start the Frontend Development Server
+Start the frontend server
 
 ```bash
   npm start
