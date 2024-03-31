@@ -239,16 +239,18 @@
     border: none;
     border-bottom: 1px solid #8a8787;
     outline: none;
+    /*padding: 5px;*/
+    font-size: 18px;
+    color: #484848;
 }
 
 
 .new-list-modal__content.active {
     max-height: 300px;
-    display: inline-block;
-    /*flex-direction: column;*/
-    /*align-items: center;*/
-    /*justify-content: center;*/
-    /*gap: 20px;*/
+    display: inline-flex;
+    flex-direction: column;
+    gap: 10px;
+
 }
 
 .new-list-modal__content button {
@@ -269,9 +271,9 @@
 
 /* EditListModal */
 
-
-.edit-list-modal {
+.edit-list {
     position: relative;
+    z-index: 9;
 }
 
 .edit-list-modal__toggle-button {
@@ -284,28 +286,37 @@
     margin-left: 5px;
 }
 
+.edit-list-modal {
+    position: absolute;
+}
+
+.edit-list-modal.active {
+    top: 10%;
+    right: 13%;
+    width: 300px;
+    height: 150px;
+    z-index: 10;
+    position: fixed;
+
+}
+
 .edit-list-modal__toggle-button:hover {
     background-color: #efefef;
 }
 
 .edit-list-modal__content {
-    min-width: 150px;
-    position: absolute;
-    top: -50px;
-    left: 50%;
-    /*transform: translateX(-50%);*/
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 20px 25px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    /*transition: max-height 0.3s ease;*/
-    max-height: 0;
     border-radius: 5px;
     border: 1px #d3d3d3 solid;
     z-index: 5;
-    display: none;
+    display: inline-flex;
+    flex-direction: column;
 }
 
 .edit-list-modal__content form{
@@ -318,17 +329,10 @@
     border: none;
     border-bottom: 1px solid #8a8787;
     outline: none;
+    font-size: 18px;
+    color: #484848;
 }
 
-
-.edit-list-modal__content.active {
-    max-height: 300px;
-    display: inline-flex;
-    flex-direction: column;
-    /*align-items: stretch;*/
-    /*justify-content: flex-start;*/
-    /*gap: 20px;*/
-}
 
 .edit-list-modal__content button {
     width: 100%;

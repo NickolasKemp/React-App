@@ -1,24 +1,25 @@
 import React, { useContext, useEffect, useState } from 'react';
 import OptionsModal from './ui/OptionsModal';
 import 'react-day-picker/dist/style.css';
-import { AppContext } from './Context';
 import Tasks from './Tasks';
 import EditListModal from './ui/EditListModal';
-import { ListType } from '../data/lists';
-import { useTasks } from '../hooks/useTasks';
+import { useTasks } from '../hooks/task/useTasks';
 import { ITaskResponse } from '../types/task.types';
-import { useCreateTask } from '../hooks/useCreateTask';
-import { useGetDate } from '../hooks/useGetDate';
+import { useCreateTask } from '../hooks/task/useCreateTask';
 import { useCreateHistoryMessage } from '../hooks/useCreateHistoryMessage';
-import { taskService } from '../services/task.service';
+import { useDeleteList } from '../hooks/list/useDeleteList';
+import { useDeleteTask } from '../hooks/task/useDeleteTask';
 interface ListProps {
   list: {id: string, label: string}
 }
 
 const List : React.FC<ListProps> = ({list}) => {
   const { items, setItems } = useTasks()
-
+  const {deleteList} = useDeleteList()
+  const {createTask} = useCreateTask()
+  const { createHistoryMessage } = useCreateHistoryMessage()
   const [currentListTasks, setCurrentListTasks] = useState<ITaskResponse[]>([])
+  const { deleteTask } = useDeleteTask()
   useEffect(() => {
     function filterCurrentListTask() {
       if(items) {
@@ -29,17 +30,12 @@ const List : React.FC<ListProps> = ({list}) => {
     filterCurrentListTask()
   }, [items])
 
-  const {lists, setLists, tasks, setTasks, setCurrentTask} = useContext(AppContext)
-  function removeList(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    e.stopPropagation()
-    e.preventDefault()
-    const clickedTListId = e.currentTarget.id
-    const remainingLists = lists.filter((list: ListType) => list.id !== clickedTListId)
-    setLists(remainingLists)
+  function removeList() {
+    for(let task of currentListTasks) {
+      deleteTask(task.id)
+    }
+    deleteList(list.id)
   }
-
-  const {createTask} = useCreateTask()
-  const { createHistoryMessage } = useCreateHistoryMessage()
 
   function createNewTask() {
    const newTask = { name: 'Untitled', dueDate: "not defined",  description: "",
@@ -51,9 +47,6 @@ const List : React.FC<ListProps> = ({list}) => {
       .catch((error) => {
         console.error("Error creating task:", error);
       });
-
-
-
   }
 
   return (
@@ -63,7 +56,7 @@ const List : React.FC<ListProps> = ({list}) => {
           <div className="title-list__actions">
             <span>{currentListTasks.length}</span>
             <OptionsModal>
-              <EditListModal id={list.id} >
+              <EditListModal id={list.id} currentListTasks={currentListTasks} >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                        stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -78,7 +71,7 @@ const List : React.FC<ListProps> = ({list}) => {
                 </svg>
                 <span>Add new card</span>
               </button>
-              <button id={list.id} onClick={(e: any) => removeList(e)} className="icon _red-icon ">
+              <button onClick={removeList} className="icon _red-icon ">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                      stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round"

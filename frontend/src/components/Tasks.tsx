@@ -1,11 +1,11 @@
 import React from 'react';
 import { ITaskResponse } from '../types/task.types';
-import  { IList } from '../types/list.types';
+import {IListResponse } from '../types/list.types';
 import Task from './Task';
 
 
 interface ITasksProps {
-  list : IList
+  list : IListResponse
   items: ITaskResponse[] | undefined
 }
 

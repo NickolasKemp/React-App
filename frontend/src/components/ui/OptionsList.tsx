@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import '../../UIComponentsStyle.css'
 import { useOutside } from '../../hooks/useOutside';
 
-// @ts-ignore
-function OptionsList({ children}) {
+function OptionsList({ children}:any) {
   const {ref, isShow, setIsShow} = useOutside(false)
 
   const toggleButtonOff = <div className='icon'>

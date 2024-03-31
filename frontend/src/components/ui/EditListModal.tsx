@@ -1,47 +1,71 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import '../../UIComponentsStyle.css'
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { AppContext } from '../Context';
-import { ListType } from '../../data/lists';
-import {v4 as uuidv4} from 'uuid';
+import { IListResponse } from '../../types/list.types';
+import { useLists } from '../../hooks/list/useLists';
+import { useOutside } from '../../hooks/useOutside';
+import { useUpdateList } from '../../hooks/list/useUpdateList';
+import { useCreateList } from '../../hooks/list/useCreateList';
+import { useDeleteList } from '../../hooks/list/useDeleteList';
+import { useUpdateTask } from '../../hooks/task/useUpdateTask';
 interface MyForm {
-  name: string;
+  label: string
 }
 
-// @ts-ignore
-function EditListModal({children, id}) {
-  const [showOptions, setShowOptions] = useState<boolean>(false);
-  const { setLists, lists } = useContext(AppContext)
-  const {register, handleSubmit} =
-    useForm<MyForm>({defaultValues: {name: lists.find((list: ListType) => list.id === id).name}})
-
-  function getPrevListName() {
-    const list = lists.find((list: ListType) => list.id === id)
-    return list.name
-  }
-
+function EditListModal({children, id, currentListTasks}: any) {
+  const { lists } = useLists()
+  const {createList} = useCreateList()
+  const {deleteList} = useDeleteList()
+  const {updateList} = useUpdateList()
+  const {updateTask} = useUpdateTask()
+  const {register, handleSubmit, reset} =
+    useForm<MyForm>({defaultValues: {label: lists?.find((list: IListResponse) => list.id === id)?.label}})
+  const { ref, isShow, setIsShow} = useOutside(false)
   const submit: SubmitHandler<MyForm> = data => {
-    console.log(data)
-    setLists((prev: ListType[]) => prev.map(list => list.id === id ?
-      {...list, name: data.name} : list))
+    const listWithSameName = lists?.find((list: IListResponse) => list.label === data.label)
+    if(!listWithSameName) {
+      // updateList({id: id, data: { label: data.label } })  :(
+      deleteList(id)
+      createList(data)
+      for(let task of currentListTasks) {
+        updateTask({id: task.id, data: { createdAt: task.createdAt, name: task.name,
+            description: task.description, priority: task.priority || undefined, dueDate: task.dueDate,
+            status: data.label } })
+        console.log('label', data.label)
+        console.log("task updated", task )
+      }
+      setIsShow(false);
+    }
+
+    console.log('list updated')
+
   }
+
+  useEffect(() => {
+    if (isShow) {
+      const defaultLabel = lists?.find((list: IListResponse) => list.id === id)?.label;
+      reset({ label: defaultLabel });
+    }
+  }, [isShow]);
 
   return (
-    <>
-      <button className="icon" onClick={() => setShowOptions(!showOptions)}>
+    <div className={`edit-list ${isShow? 'active' : ''} `} >
+      <button className="icon" onClick={() => setIsShow(!isShow)}>
         {children}
       </button>
-      <div className="edit-list-modal">
-        <div className={`edit-list-modal__content ${showOptions ? 'active' : ''}`}>
-          <h2>Create new list</h2>
-          <form onSubmit={handleSubmit(submit)}>
-            <label>Name of new list:</label>]
-            <input autoComplete="off"  placeholder='list name' type="text" {...register('name', { required: true })} />
-            <button>Edit</button>
-          </form>
-        </div>
+      { isShow &&
+        <div className={`edit-list-modal ${isShow? 'active' : ''} `}>
+          <div  ref={ref}  className={`edit-list-modal__content`}>
+            <form onSubmit={handleSubmit(submit)}>
+              <label>New label:</label>
+              <input autoComplete="off" placeholder="" type="text" {...register('label', { required: true })} />
+              <button>Edit</button>
+            </form>
+          </div>
       </div>
-    </>
+      }
+
+    </div>
   );
 }
 

@@ -1,7 +1,7 @@
-import { taskService } from "../services/task.service"
+import { taskService } from "../../services/task.service"
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { ITaskResponse } from '../types/task.types';
+import { ITaskResponse } from '../../types/task.types';
 
 
 export function useTasks() {

@@ -8,19 +8,18 @@ export class ListService {
   constructor(private prisma: AppService) {
   }
 
+  async getAll() {
+    return this.prisma.list.findMany();
+  }
 
-  // async getAll() {
-  //   return this.prisma.list.findMany();
-  // }
-  //
-  // async create(dto: ListDto) {
-  //   return this.prisma.task.create({
-  //     data: { ...dto },
-  //   });
-  // }
+  async create(dto: ListDto) {
+    return this.prisma.list.create({
+      data: { ...dto },
+    });
+  }
 
   getById(id: string) {
-    return this.prisma.task.findUnique({
+    return this.prisma.list.findUnique({
       where: {
         id,
       },
@@ -28,7 +27,7 @@ export class ListService {
   }
 
   async update(dto: Partial<ListDto>, taskId: string) {
-    return this.prisma.task.update({
+    return this.prisma.list.update({
       where: {
         id: taskId,
       },
@@ -37,7 +36,7 @@ export class ListService {
   }
 
   async delete(taskId: string) {
-    return this.prisma.task.delete({
+    return this.prisma.list.delete({
       where: {
         id: taskId,
       },

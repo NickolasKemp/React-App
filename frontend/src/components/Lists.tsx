@@ -1,20 +1,20 @@
-import React, { useContext }from 'react';
+import React from 'react';
 import List from './List';
-import { AppContext } from './Context';
-import { ListType } from '../data/lists'
-import { useTasks } from '../hooks/useTasks';
+import { useLists } from '../hooks/list/useLists';
+import { IListResponse } from '../types/list.types';
 
 const Lists = () => {
 
-  const {lists} = useContext(AppContext)
-  const {items} = useTasks()
+  const { lists} = useLists()
 
   return (
     <div className="lists-container">
       {
-        lists.map((list: ListType) =>
+        lists ?
+        lists.map((list: IListResponse) =>
          <List key={list.id} list={list} />
         )
+          : <h3>There are not lists. Create one</h3>
       }
     </div>
   )

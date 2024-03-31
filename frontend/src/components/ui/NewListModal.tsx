@@ -1,27 +1,29 @@
-import React, { useContext, useState } from 'react';
+import React, {  useState } from 'react';
 import '../../UIComponentsStyle.css'
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { AppContext } from '../Context';
-import { ListType } from '../../data/lists';
-import {v4 as uuidv4} from 'uuid';
 import { useOutside } from '../../hooks/useOutside';
+import { IListResponse } from '../../types/list.types';
+import { useCreateList } from '../../hooks/list/useCreateList';
+import { useLists } from '../../hooks/list/useLists';
 interface MyForm {
   label: string;
 }
 
 function NewListModal({children}: any){
-  const { setLists, lists} = useContext(AppContext)
-  const {register, handleSubmit} =
+  const {lists} = useLists()
+  const {register, handleSubmit, reset} =
     useForm<MyForm>({defaultValues: {}})
   const {ref, isShow, setIsShow} = useOutside(false)
 
-  const createList: SubmitHandler<MyForm> = data => {
-    const listWithSameName = lists.find((list: ListType) => list.label === data.label)
+  const { createList } = useCreateList()
+  const createNewList: SubmitHandler<MyForm> = data => {
+    const listWithSameName = lists?.find((list: IListResponse) => list.label === data.label)
     if(!listWithSameName) {
-      setLists((prev: ListType[]) => ([...prev, {...data, id: uuidv4()}]))
+      createList(data)
+      reset()
+      setIsShow(!isShow)
     }
   }
-
 
   return (
     <div>
@@ -29,18 +31,16 @@ function NewListModal({children}: any){
         {children}
       </button>
       <div className="new-list-modal">
-
         <div ref={ref} className={`new-list-modal__content ${isShow ? 'active' : ''}`}>
-          <h2>Create new list</h2>
-          <form onSubmit={handleSubmit(createList)}>
-            <label>Name of new list:</label>
-            <input autoComplete="off"  placeholder='list name' type="text" {...register('label')}  />
+          <h3>Create new list</h3>
+          <form onSubmit={handleSubmit(createNewList)}>
+            <input autoComplete="off"  placeholder='' type="text" {...register('label')}  />
             <button><span>Create</span></button>
           </form>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export default NewListModal;

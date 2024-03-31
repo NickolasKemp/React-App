@@ -1,4 +1,4 @@
-import { TypeTaskFormState } from '../types/task.types';
+import { TypeTaskFormState } from '../../types/task.types';
 import { useCallback, useEffect } from 'react';
 import { useUpdateTask } from './useUpdateTask';
 import { useCreateTask } from './useCreateTask';

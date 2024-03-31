@@ -2,32 +2,28 @@ import React, { useContext } from 'react';
 import TaskModal from './TaskModal';
 import OptionsModal from './ui/OptionsModal';
 import OptionsList from './ui/OptionsList';
-import { ListType } from '../data/lists';
-import { useDeleteTask } from '../hooks/useDeleteTask';
-import { AppContext } from './Context';
+import { useDeleteTask } from '../hooks/task/useDeleteTask';
 import { useOutside } from '../hooks/useOutside';
-import { useUpdateTask } from '../hooks/useUpdateTask';
+import { useUpdateTask } from '../hooks/task/useUpdateTask';
 import { useCreateHistoryMessage } from '../hooks/useCreateHistoryMessage';
-
+import { IListResponse } from '../types/list.types';
+import { useLists } from '../hooks/list/useLists';
 
 const Task = ({task, list}: any) => {
-
-  const {lists} = useContext(AppContext)
+  const {lists} = useLists()
   const { createHistoryMessage } = useCreateHistoryMessage()
+  const {deleteTask, isDeletePending} = useDeleteTask()
+  const { ref, isShow, setIsShow } = useOutside(false)
+  const { updateTask} = useUpdateTask()
 
   function editTask() {
     setIsShow(true)
   }
 
-  const {deleteTask, isDeletePending} = useDeleteTask()
-  function removeTask(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    const clickedTaskId = e.currentTarget.id
-    deleteTask(clickedTaskId)
-
+  function removeTask() {
+    deleteTask(task.id)
     createHistoryMessage(`You deleted task <span>${task.name}</span> from "${list.label}"`, task.id)
   }
-
-  const { updateTask} = useUpdateTask()
 
   function changeList(listLabel: any) {
     if(task.status.toLowerCase() !== listLabel.toLowerCase()) {
@@ -39,8 +35,6 @@ const Task = ({task, list}: any) => {
       createHistoryMessage(`You moved task <span>${task.name}</span> from "${list.label}" to "${listLabel}"`, task.id)
     }
   }
-
-  const { ref, isShow, setIsShow } = useOutside(false)
 
   return (
     <div key={task.id} className="task">
@@ -56,7 +50,7 @@ const Task = ({task, list}: any) => {
             </svg>
             <span>Edit</span>
           </button>
-          <button id={task.id} onClick={(e: any) => removeTask(e)} className='icon _red-icon '>
+          <button id={task.id} onClick={() => removeTask()} className='icon _red-icon '>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                  stroke="currentColor" className="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -81,7 +75,7 @@ const Task = ({task, list}: any) => {
         <div className="task__priority">{task.priority ? task.priority : 'not defined'}</div>
       </div>
       <OptionsList>
-        {lists.map((list: ListType) => <button id={task.id} key={list.id} onClick={() => changeList(list.label)}>{list.label}</button>)}
+        {lists?.map((list: IListResponse) => <button id={task.id} key={list.id} onClick={() => changeList(list.label)}>{list.label}</button>)}
       </OptionsList>
     </div>
   )

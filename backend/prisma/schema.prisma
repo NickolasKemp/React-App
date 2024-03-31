@@ -20,6 +20,15 @@ model Task {
   @@map("task")
 }
 
+model List {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  label     String
+
+  @@map("list")
+}
+
 enum Priority {
   low
   medium

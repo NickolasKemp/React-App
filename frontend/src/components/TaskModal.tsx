@@ -6,25 +6,17 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import CalendarModal from './ui/CalendarModal';
 import PriorityList from './ui/PriorityList';
 import { EnumTaskPriority, ITaskResponse, TypeTaskFormState } from '../types/task.types';
-import { useTaskDebounce } from '../hooks/useTaskDebounce';
-import { useUpdateTask } from '../hooks/useUpdateTask';
+import { useTaskDebounce } from '../hooks/task/useTaskDebounce';
+import { useUpdateTask } from '../hooks/task/useUpdateTask';
 import { useCreateHistoryMessage } from '../hooks/useCreateHistoryMessage';
+import { useHistoryMessages } from '../hooks/useHistoryMessages';
+import { IListResponse } from '../types/list.types';
 
 interface ITaskModal {
   item: ITaskResponse
-  list : IList
+  list : IListResponse
 }
-
-interface IList {
-  id: string;
-  label: string;
-}
-
-interface TaskModalProps {
-}
-
 const TaskModal = ( {list, item, taskModalRef, setIsShow}: any) => {
-
   const { register, control, watch } = useForm<TypeTaskFormState>({
     defaultValues: {
       name: item.name,
@@ -37,24 +29,21 @@ const TaskModal = ( {list, item, taskModalRef, setIsShow}: any) => {
   })
 
   useTaskDebounce({ watch, itemId: item.id })
-
   const [selected, setSelected] = useState<Date>();
   const formattedSelected = selected ? format(selected, 'PP') : item.dueDate ;
   const [prevTaskName, setPrevTaskName] = useState(item.name)
   const [prevTaskDescription, setPrevTaskDescription] = useState(item.description)
   const { createHistoryMessage } = useCreateHistoryMessage()
+  const { updateTask } = useUpdateTask()
+  const { historyMessages } = useHistoryMessages([watch()])
 
   function updateTaskDueData() {
     const updatedTask = {...item, dueDate: formattedSelected}
     updateTask({id: item.id, data: updatedTask})
 
-    console.log("update task due date ")
-
     createHistoryMessage(`You changed due data for task <span>${item.name}</span> 
     from ${item.dueDate} to ${formattedSelected}`, item.id )
   }
-
-  const { updateTask } = useUpdateTask()
 
   function changePriority(priority: EnumTaskPriority) {
     const changedPriorityTask = { createdAt: item.createdAt, name: item.name,
@@ -74,19 +63,6 @@ const TaskModal = ( {list, item, taskModalRef, setIsShow}: any) => {
       createHistoryMessage(`You renamed task description from <span>${prevTaskDescription}</span> to <span>${watch('description')}</span>`, item.id )
     }
   }
-
-  const [historyMessages, setHistoryMessages] = useState<any>([])
-
-
-  useEffect(() => {
-
-    const unparsedMessages =  window.localStorage.getItem('historyMessages')
-    const messages = unparsedMessages ? JSON.parse(unparsedMessages) : ["no events"]
-    setHistoryMessages(messages)
-
-    // window.localStorage.removeItem('historyMessages')
-  }, [watch()]);
-
 
   return (
       <div ref={taskModalRef}  className='task-modal display-block'>
@@ -160,10 +136,8 @@ const TaskModal = ( {list, item, taskModalRef, setIsShow}: any) => {
           </div>
           <div className="modal-task__description">
             <h3>Description</h3>
-            <form>
-              <textarea rows={4} cols={50} autoComplete="off"
+              <textarea className='modal-task__textarea' rows={4} cols={50} autoComplete="off"
                         placeholder="Empty" {...register('description')} ></textarea>
-            </form>
           </div>
         </div>
         <div className='task-activity'>
@@ -179,7 +153,6 @@ const TaskModal = ( {list, item, taskModalRef, setIsShow}: any) => {
         </div>
       </section>
       </div>
-
   )
 }
 

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from './Context';
 import { useOutside } from '../hooks/useOutside';
+import { useHistoryMessages } from '../hooks/useHistoryMessages';
 
 
 
@@ -15,18 +16,7 @@ const {ref, isShow, setIsShow} = useOutside(false)
   }
   const show = isShow ? "display-block" : "display-none"
 
-  const [historyMessages, setHistoryMessages] = useState<any>([])
-
-
-  useEffect(() => {
-
-    const unparsedMessages =  window.localStorage.getItem('historyMessages')
-    const messages = unparsedMessages ? JSON.parse(unparsedMessages) : ["no events"]
-    setHistoryMessages(messages)
-
-    // window.localStorage.removeItem('historyMessages')
-  }, [isShow]);
-
+  const { historyMessages } = useHistoryMessages([isShow])
 
   return (
     <div>
@@ -45,7 +35,7 @@ const {ref, isShow, setIsShow} = useOutside(false)
           <div className='history-modal__history-massage history-massage' >
             {
               historyMessages.map((message: any) => (
-                <div className='history-massage__container' key={message.id}> {/* Ensure each mapped element has a unique key */}
+                <div className='history-massage__container' key={message.id}>
                   <p className='history-message__message' dangerouslySetInnerHTML={{ __html: message.message }}></p>
                   <div className='history-massage__date' >{message.date}</div>
                 </div>

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { taskService } from '../services/task.service';
-import { TypeTaskFormState } from '../types/task.types';
+import { taskService } from '../../services/task.service';
+import { TypeTaskFormState } from '../../types/task.types';
 
 // export function useCreateTask() {
 //
