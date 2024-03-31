@@ -7,9 +7,10 @@ export function useHistoryMessages(dependencyArray?:any[]) {
     useEffect(() => {
 
       const unparsedMessages =  window.localStorage.getItem('historyMessages')
-      const messages = unparsedMessages ? JSON.parse(unparsedMessages) : ["no events"]
+      const messages = unparsedMessages ? JSON.parse(unparsedMessages) : []
       setHistoryMessages(messages)
 
+      // clear local storage
       // window.localStorage.removeItem('historyMessages')
     }, dependencyArray || []);
 

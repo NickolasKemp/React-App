@@ -156,7 +156,6 @@
     top: -50px;
     left: 105%;
     /*transform: translateX(-50%);*/
-    list-style: none;
     padding: 0;
     margin: 0;
     background-color: #fff;
@@ -168,6 +167,13 @@
     border: 1px #d3d3d3 solid;
     z-index: 2;
     display: none;
+}
+
+@media screen and (max-width: 680px) {
+    .calendar-modal__options-list {
+        top: 30px;
+        left: -50px;
+    }
 }
 
 .calendar-modal__options-list.active {
@@ -354,6 +360,8 @@
 
 .priority-list__container {
     position: relative;
+    max-width: 150px;
+
 }
 
 .priority-list__toggle-button {
@@ -395,6 +403,7 @@
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     z-index: 2;
+    max-width: 100%;
 }
 
 .priority-list__options-list.active {

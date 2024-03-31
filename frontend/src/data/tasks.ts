@@ -1,21 +1,12 @@
-export interface Task {
-  id: string,
-  name: string,
-  description: string,
-  status: string,
-  dueDate: string,
-  priority: Priority| 'not defined'
-}
-
+//example data
 export enum Priority {
   Low = "low",
   Medium = 'medium',
   High = 'high'
 }
 
-export const priorities = [Priority.Low, Priority.Medium, Priority.High]
 
-export const tasks: Task[] = [
+export const TASKS = [
   {
     id: '1',
     name: "add real tasks from db",

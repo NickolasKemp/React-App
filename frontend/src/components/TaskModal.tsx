@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { DayPicker } from 'react-day-picker';
-import { priorities, Task } from '../data/tasks';
+import { priorities } from '../types/task.types';
 import { format } from 'date-fns';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import CalendarModal from './ui/CalendarModal';
@@ -35,7 +35,7 @@ const TaskModal = ( {list, item, taskModalRef, setIsShow}: any) => {
   const [prevTaskDescription, setPrevTaskDescription] = useState(item.description)
   const { createHistoryMessage } = useCreateHistoryMessage()
   const { updateTask } = useUpdateTask()
-  const { historyMessages } = useHistoryMessages([watch()])
+  const { historyMessages } = useHistoryMessages([watch])
 
   function updateTaskDueData() {
     const updatedTask = {...item, dueDate: formattedSelected}
@@ -69,9 +69,9 @@ const TaskModal = ( {list, item, taskModalRef, setIsShow}: any) => {
       <section className="modal-main ">
         <div className='modal-task'>
           <button className="modal_main__close-btn" onClick={closeTaskModal}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
                  stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
           </button>
           <h3 className="modal-task__name">
@@ -89,20 +89,20 @@ const TaskModal = ( {list, item, taskModalRef, setIsShow}: any) => {
                 <span>Status</span>
               </div>
               <div>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
                      stroke="currentColor"
                      className="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round"
+                  <path strokeLinecap="round" strokeLinejoin="round"
                         d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                 </svg>
                 <span>Due date</span>
               </div>
               <div>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
                      stroke="currentColor" className="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round"
+                  <path strokeLinecap="round" strokeLinejoin="round"
                         d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6Z" />
                 </svg>
                 <span>Priority</span>
               </div>
@@ -144,8 +144,8 @@ const TaskModal = ( {list, item, taskModalRef, setIsShow}: any) => {
           <h2>Activity</h2>
           {
             historyMessages.filter((message: { taskId: any }) => message?.taskId === item.id)
-              .map((message:any) =>
-                <div className='task-activity__container' key={message.id}>
+              .map((message:any, index:any) =>
+                <div className='task-activity__container' key={index}>
                   <p className='task-activity__message' dangerouslySetInnerHTML={{ __html: message.message }}></p>
                   <div className='task-activity__date'>{message.date}</div>
               </div>)

@@ -1,5 +1,6 @@
+import { IBase } from './root.types';
 
-export interface IListResponse {
+export interface IListResponse extends IBase {
   id: string,
   label: string
 }

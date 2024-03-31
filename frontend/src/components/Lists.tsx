@@ -10,11 +10,11 @@ const Lists = () => {
   return (
     <div className="lists-container">
       {
-        lists ?
+        lists?.length ?
         lists.map((list: IListResponse) =>
          <List key={list.id} list={list} />
         )
-          : <h3>There are not lists. Create one</h3>
+          : <h3 className="_nodata-title" >There are not lists. Create one</h3>
       }
     </div>
   )

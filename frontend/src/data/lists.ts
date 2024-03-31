@@ -1,9 +1,5 @@
-export interface ListType {
-  id: string,
-  label: string,
-}
-
-export const lists = [
+//example data
+export const LISTS = [
   {
     id: 'to do',
     label: "To do"
