@@ -9,4 +9,8 @@ export class AppController {
   Connect(): Promise<void> {
     return this.appService.onModuleInit();
   }
+
+  getHello() {
+    return 'Hello World!';
+  }
 }

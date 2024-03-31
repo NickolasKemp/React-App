@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { AppService } from '../app.service';
-import { TaskDto } from './task.dto';
+import { ListDto } from './list.dto';
 
 
 @Injectable()
-export class TaskService {
+export class ListService {
   constructor(private prisma: AppService) {
   }
 
 
-  async getAll() {
-    return this.prisma.task.findMany();
-  }
-
-  async create(dto: TaskDto) {
-    return this.prisma.task.create({
-      data: { ...dto },
-    });
-  }
+  // async getAll() {
+  //   return this.prisma.list.findMany();
+  // }
+  //
+  // async create(dto: ListDto) {
+  //   return this.prisma.task.create({
+  //     data: { ...dto },
+  //   });
+  // }
 
   getById(id: string) {
     return this.prisma.task.findUnique({
@@ -27,7 +27,7 @@ export class TaskService {
     });
   }
 
-  async update(dto: Partial<TaskDto>, taskId: string) {
+  async update(dto: Partial<ListDto>, taskId: string) {
     return this.prisma.task.update({
       where: {
         id: taskId,
