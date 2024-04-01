@@ -7,6 +7,12 @@ Clone the project
   git clone https://github.com/NickolasKemp/React-App.git
 ```
 
+Create postrgeeSQL db using Docker
+
+```bash
+  docker-compose up --build
+```
+
 Go to the project directories
 
 ```bash
@@ -24,7 +30,7 @@ Create and configure .env file in backend directory
 
 
 ```bash
-DATABASE_URL="postgresql://user:password@host:port/database_name?schema=public"
+DATABASE_URL="postgresql://postgres:postgres@localhost:5433/postgres?schema=public"
 ```
 
 Generate prisma client

@@ -13,5 +13,5 @@ async function bootstrap() {
   await app.listen(PORT);
 
 }
-// @ts-ignore
+
 bootstrap();

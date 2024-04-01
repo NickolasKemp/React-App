@@ -1,7 +1,7 @@
 import axios, {type CreateAxiosDefaults} from 'axios';
 
 const options:CreateAxiosDefaults = {
-  baseURL: 'http://localhost:5000/api',
+  baseURL: process.env.SERVER_URL || "http://localhost:5000/api",
   headers: {
     "Content-Type" : 'application/json'
   }
@@ -10,3 +10,5 @@ const options:CreateAxiosDefaults = {
 const axiosInstance = axios.create(options)
 
 export {axiosInstance}
+
+
