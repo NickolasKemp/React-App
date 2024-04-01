@@ -26,13 +26,6 @@ Install dependencies
   npm install
 ```
 
-Create and configure .env file in backend directory
-
-
-```bash
-DATABASE_URL="postgresql://postgres:postgres@localhost:5433/postgres?schema=public"
-```
-
 Generate prisma client
 
 ```bash
