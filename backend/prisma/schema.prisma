@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:postgres@localhost:5433/postgres?schema=public"
+  url      = "postgresql://postgres:lggUajHlrcDMDSdeXSFRmBnGwAVnnwPf@roundhouse.proxy.rlwy.net:44157/railway"
 }
 
 model Task {
