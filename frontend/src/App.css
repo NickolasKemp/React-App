@@ -228,7 +228,8 @@
   border-radius: 15px;
   /*padding: 80px 30px;*/
   display: flex;
-    gap: 25px;
+  gap: 25px;
+  justify-content: space-between;
 }
 
 .modal-main:before {
@@ -461,6 +462,7 @@
     border-radius: 15px;
     display: flex;
     gap: 25px;
+    margin-top: 50px;
   }
 
   .task-modal {
@@ -498,9 +500,9 @@
   background-color: #e3e1e1;
   padding: 70px 10px 50px 30px ;
   overflow-y: auto;
-    overflow-x: hidden;
-
+  overflow-x: hidden;
   width: 100%;
+  max-width: 400px;
 }
 
 @media screen and (max-width: 960px) {
@@ -551,6 +553,7 @@
   font-style: italic;
   min-width: 150px;
     flex: 1 1 50%;
+
 }
 
 
